@@ -3,11 +3,9 @@ package com.example.demo.controllers;
 
 import com.example.demo.logics.User;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.Console;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,6 +37,11 @@ public class ExampleController {
     @RequestMapping("/Users/{name}")
     public User getUsers(@PathVariable String name) {
         return Users.stream().filter(t-> t.getName().equals(name)).findFirst().get() ;
+    }
+
+    @PostMapping("/addUser")
+    boolean newEmployee(@RequestBody User newUser) {
+        return Users.add(newUser);
     }
 
 }
