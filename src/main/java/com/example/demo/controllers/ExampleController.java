@@ -1,15 +1,18 @@
 package com.example.demo.controllers;
 
 
+import com.example.demo.logics.SecurityObject;
 import com.example.demo.logics.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import javafx.util.Pair;
 import org.apache.coyote.Request;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Console;
 import java.io.StringReader;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +52,48 @@ public class ExampleController {
         return Users.add(newUser);
     }
 
+    @RequestMapping("/securityObjectCheck")
+    SecurityObject securityObjectCheck() {
+        List<Object> list = new LinkedList<>();
+        list.add(new User("avi","avi@walla.com"));
+        SecurityObject so = new SecurityObject("123456", "add User", list);
+        return so;
+    }
+
+
+    /**
+     * demo post req -> {"reqID":"123456","functionName":"add User","object":[{"name":"avi","mail":"avi@walla.com"}]}
+     * @param securityObject
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(
+            value = "/postSecurity",
+            method = RequestMethod.POST)
+    public boolean process(@RequestBody SecurityObject securityObject)
+            throws Exception {
+        if(securityObject.getReqID().equals("123456")){
+           if(securityObject.getFunctionName().equals("add User")){
+               return Users.add(new User((LinkedHashMap<String,String>)securityObject.getObject().get(0)));
+           }
+        }
+        return false;
+    }
+
+
+    /***
+     * demo post req ->
+     * {
+     *     "ReqID":  "123456",
+     *     "User":{
+     *         "name": "ko",
+     *         "mail": "kobigal@kal"
+     *     }
+     * }
+     * @param payload
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(
             value = "/process",
             method = RequestMethod.POST)
