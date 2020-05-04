@@ -6,8 +6,8 @@ public class User {
     String name ;
     String mail ;
 
-    @JsonIgnore
-    Object unUsefulObject; // we can ignore fields that way!
+//    @JsonIgnore
+//    Object unUsefulObject; // we can ignore fields that way!
 
     public User(String name, String mail) {
         this.name = name;
